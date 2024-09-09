@@ -1,0 +1,20 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "prettier",
+    "unused-imports"
+  ],
+  "extends": [
+    "prettier"
+  ],
+  "rules": {
+    "unused-imports/no-unused-imports": "error",
+    "prettier/prettier": 2,
+    "no-console": "error",
+    "semi": "error",
+    "quotes": ["error", "double"],
+    "no-multi-spaces": "error",
+    "arrow-body-style": "error"
+  }
+}
