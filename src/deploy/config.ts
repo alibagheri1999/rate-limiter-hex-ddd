@@ -8,6 +8,8 @@ export const APP_CONFIG: CONFIG = {
   username: process.env.MONGO_USERNAME || "root",
   password: process.env.MONGO_PASSWORD || "example",
   dbName: process.env.MONGO_DB || "myCollection",
+  cachePort: process.env.REDIS_PORT || 6379,
+  cacheHost: process.env.REDIS_HOST || "localhost",
   httpServerPort: process.env.HTTP_SERVER_CONTAINER_PORT || 3000,
   maxRateLimit: process.env.MAX_RATE_LIMIT || 1,
   rateLimitTime: process.env.RATE_LIMIT_TIME_MIN || 20,
@@ -21,7 +23,7 @@ export const APP_CONFIG: CONFIG = {
   postgresPassword: process.env.PG_PASSWORD || "changeme",
   postgresDbName: (process.env.PG_DB || "myCollection").toLowerCase(),
   jwtSecretKey: process.env.JWT_SECRET_KEY || "veryStrongKey:)",
-  debugMode: process.env.DEBUG_MODE === "true",
+  debugMode: process.env.DEBUG_MODE === "true" || true,
   jsDocOptions: {
     definition: {
       components: {

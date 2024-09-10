@@ -9,13 +9,16 @@ import { DI } from "./DI";
 import { TYPES } from "../internal/domain/types";
 import { Migrator } from "@migrations";
 import { Postgres } from "../internal/adapters/store";
+import { Redis } from "../internal/adapters/cache";
 
 dotenv.config({
-  path: process.cwd() + "/src/env/.env"
+  path: process.cwd() + "/src/deploy/env/.env"
 });
 const logger = DI.get<Logger>(TYPES.Logger);
 
 export async function bootstrap() {
+  // await DI.get<Redis>(TYPES.Redis).connect();
+
   try {
     await DI.get<Migrator>(TYPES.Migrator).createDatabase();
   } catch (e) {

@@ -25,6 +25,8 @@ declare global {
       DEBUG_MODE: string;
       RATE_LIMIT_TIME_MIN: number;
       MAX_RATE_LIMIT: number;
+      REDIS_PORT: number;
+      REDIS_HOST: string;
     }
   }
 }

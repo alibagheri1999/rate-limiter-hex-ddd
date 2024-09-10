@@ -15,7 +15,7 @@ export class Postgres {
     this.connect();
   }
 
-  connect = () => {
+  connect() {
     try {
       let pgClient = new Client({
         host: this.cfg.postgresHost,
@@ -41,5 +41,6 @@ export class Postgres {
     }
   };
 
-  public static async setup(cfg: CONFIG) {}
+  public static async setup(cfg: CONFIG) {
+  }
 }

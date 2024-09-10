@@ -1,17 +1,13 @@
-export const getRandomIntInclusive = function getRandomIntInclusive(min, max) {
+export const getRandomIntInclusive = function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
 };
 
-export const getRandomString = (length) => {
-  let result = "";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
+export const getRandomPhoneNumber = () => {
+  let phoneNumbers: string[] = ["+989352461484","+989352461485","+989352461486","+989352461487","+989352461487","+989352461488","+989352461489"];
+  const randomInt = getRandomIntInclusive(4, 9)
+  return phoneNumbers[randomInt]
 };
 
 export const updateQueryBuilder = (tableName, entity, condition): string => {

@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import { AuthRoutes, Middlewares, Router, UserRoutes } from "../../index";
+import { Middlewares, Router, UserRoutes } from "../../index";
 import { CONFIG } from "../../../../deploy";
 import { Logger } from "../../../../internal/application/utils/log";
 import { inject, injectable } from "inversify";
@@ -13,20 +13,17 @@ export class HttpServer {
 
   constructor(
     @inject(TYPES.UserRoutes) private userRoutes: UserRoutes,
-    @inject(TYPES.AuthRoutes) private authRoutes: AuthRoutes,
     @inject(TYPES.RootRouter) private rootRouter: Router,
     @inject(TYPES.Middlewares) private middlewares: Middlewares,
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG,
     @inject(TYPES.Logger) private logger: Logger
   ) {
     userRoutes.registerRoutes();
-    authRoutes.registerRoutes();
-    middlewares.registerMiddlewares();
+    middlewares.registerMiddlewares().then().catch();
 
     this.server = http.createServer(
       express()
         .use("/", this.rootRouter.getRouter())
-        .use("/api/auth", this.authRoutes.router.getRouter())
         .use("/api/users", this.userRoutes.router.getRouter)
     );
   }

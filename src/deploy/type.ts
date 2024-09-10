@@ -6,6 +6,8 @@ export type CONFIG = {
   username: string;
   password: string;
   dbName: string;
+  cachePort: number,
+  cacheHost: string,
   httpServerPort: number;
   websocketServerPort: number;
   grpcServerPort: number;

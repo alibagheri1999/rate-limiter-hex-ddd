@@ -4,10 +4,10 @@ import cors from "cors";
 import { APP_CONFIG, CONFIG } from "../../../../deploy";
 import expressWinston from "express-winston";
 import winston from "winston";
-import { Router } from "../../index";
+import { Router } from "../router";
 import { Logger, PREFIXES } from "../../../../internal/application/utils/log";
 import swaggerUi from "swagger-ui-express";
-import { DocGenerator } from "../../../../cmd/doc";
+import { DocGenerator } from "../../../doc";
 import { inject, injectable } from "inversify";
 import { HTTP_STATUS_MESSAGE, TYPES } from "../../../../internal/domain/types";
 import rateLimit from "express-rate-limit";
@@ -17,8 +17,6 @@ import fsI18Next from "i18next-node-fs-backend";
 import i18nextMiddleware from "i18next-http-middleware";
 import path from "path";
 
-const promMid = require("express-prometheus-middleware");
-
 @injectable()
 export class Middlewares {
   constructor(
@@ -26,7 +24,8 @@ export class Middlewares {
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG,
     @inject(TYPES.DocGenerator) private docGenerator: DocGenerator,
     @inject(TYPES.Logger) private logger: Logger
-  ) {}
+  ) {
+  }
 
   async registerMiddlewares() {
     const expressRouter = this.router.getRouter();
@@ -70,7 +69,7 @@ export class Middlewares {
       msg: APP_CONFIG.logFormat,
       expressFormat: true,
       colorize: true,
-      ignoreRoute: function () {
+      ignoreRoute: function() {
         return false;
       }
     });
@@ -79,16 +78,6 @@ export class Middlewares {
       winstonLogger(req, res, next);
     });
 
-    expressRouter.use(
-      promMid({
-        metricsPath: "/metrics",
-        collectDefaultMetrics: true,
-        requestDurationBuckets: [0.1, 0.5, 1, 1.5],
-        requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
-        responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400]
-      })
-    );
-
     expressRouter.use(express.urlencoded({ extended: true }));
 
     this.logger.print(
@@ -96,8 +85,6 @@ export class Middlewares {
       null,
       `static folder path : ${APP_CONFIG.staticFolder}`
     );
-
-    expressRouter.use(express.static(APP_CONFIG.staticFolder));
 
     expressRouter.use(
       helmet({

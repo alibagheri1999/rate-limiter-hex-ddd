@@ -1,5 +1,5 @@
 import { IUserController } from "../../../../internal/ports";
-import { Router } from "../../index";
+import { Router } from "../router";
 import { CONFIG } from "../../../../deploy";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../internal/domain/types";
@@ -15,9 +15,8 @@ export class UserRoutes {
     const expressRouter = this.router.getRouter();
 
     expressRouter
-      .route("/")
-      .get<any, string>(this.userController.getUsers)
-      .post<any, string>(this.userController.createUser);
+      .route("/data")
+      .get<any, string>(this.userController.getRandomUser)
 
     return this.router;
   }
