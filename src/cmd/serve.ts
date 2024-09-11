@@ -3,13 +3,12 @@
 */
 
 import * as dotenv from "dotenv";
-import { GrpcServer, HttpServer } from "./gateway";
+import { HttpServer } from "./gateway";
 import { Logger, PREFIXES } from "../internal/application/utils/log";
 import { DI } from "./DI";
 import { TYPES } from "../internal/domain/types";
 import { Migrator } from "@migrations";
 import { Postgres } from "../internal/adapters/store";
-import { Redis } from "../internal/adapters/cache";
 
 dotenv.config({
   path: process.cwd() + "/src/deploy/env/.env"
@@ -30,7 +29,6 @@ export async function bootstrap() {
 
     DI.get<HttpServer>(TYPES.HttpServer).listen();
 
-    DI.get<GrpcServer>(TYPES.GrpcServer).listen();
   } catch (e) {
     logger.print(PREFIXES.SERVE, e as Error, (e as Error).message);
   }

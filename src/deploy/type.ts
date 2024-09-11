@@ -24,4 +24,5 @@ export type CONFIG = {
   clusterMode: boolean;
   rateLimitTime: number;
   maxRateLimit: number;
+  maxLogFileSize: number;
 };

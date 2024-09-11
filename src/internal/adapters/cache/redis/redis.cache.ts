@@ -6,7 +6,7 @@ import { TYPES } from "../../../domain/types";
 
 @injectable()
 export class Redis {
-  public client: any;
+  public client: any
 
   constructor(
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG,

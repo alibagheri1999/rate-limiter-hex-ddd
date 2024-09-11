@@ -12,11 +12,7 @@ export class UserController implements IUserController {
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG
   ) {}
 
-  static Setup(userService: IUserService, cfg: CONFIG): UserController {
-    return new UserController(userService, cfg);
-  }
-
-  async getRandomUser(req: Request, res: Response): Promise<User> {
+  async getRandomUser(_: Request, __: Response): Promise<User> {
     return await this.userService.getRandomUser()
   }
 }

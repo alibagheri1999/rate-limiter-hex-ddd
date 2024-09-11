@@ -14,9 +14,6 @@ export class PgUserRepository implements IUserRepository {
   ) {
   }
 
-  static Setup(db: store.Postgres, cfg: CONFIG): PgUserRepository {
-    return new PgUserRepository(db, cfg);
-  }
 
   async findUser(phoneNumber: string): Promise<REPOSITORY_RESULT<User>> {
     try {

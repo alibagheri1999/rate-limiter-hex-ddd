@@ -20,6 +20,8 @@ import {
 import { UserService } from "../../internal/application/services";
 import { Logger } from "../../internal/application/utils/log";
 import { Redis } from "../../internal/adapters/cache";
+import { ICacheRepository } from "../../internal/ports";
+import { RedisCacheRepository } from "../../internal/adapters/repository/redis/cache.repository";
 
 const DI = new Container();
 
@@ -33,10 +35,10 @@ DI.bind<Migrator>(TYPES.Migrator).to(Migrator).inSingletonScope();
 DI.bind<UserRoutes>(TYPES.UserRoutes).to(UserRoutes).inSingletonScope();
 
 DI.bind<Router>(TYPES.UserRouter).to(Router).inSingletonScope();
-DI.bind<Router>(TYPES.AuthRouter).to(Router).inSingletonScope();
 DI.bind<Router>(TYPES.RootRouter).to(Router).inSingletonScope();
 
 DI.bind<IUserRepository>(TYPES.UserRepository).to(PgUserRepository).inSingletonScope();
+DI.bind<ICacheRepository>(TYPES.CacheRepository).to(RedisCacheRepository).inSingletonScope();
 
 DI.bind<IUserService>(TYPES.UserService).to(UserService).inSingletonScope();
 
