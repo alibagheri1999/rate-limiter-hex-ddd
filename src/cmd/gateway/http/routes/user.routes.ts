@@ -3,6 +3,7 @@ import { Router } from "../router";
 import { CONFIG } from "../../../../deploy";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../internal/domain/types";
+import { HttpRoutes } from "../../../../internal/domain/types/httpRoutes";
 
 @injectable()
 export class UserRoutes {
@@ -14,9 +15,7 @@ export class UserRoutes {
   registerRoutes(): Router {
     const expressRouter = this.router.getRouter();
 
-    expressRouter
-      .route("/data")
-      .get<any, string>(this.userController.getRandomUser)
+    expressRouter.route(HttpRoutes.GET_DATA).get<any, any>(this.userController.getRandomUser);
 
     return this.router;
   }

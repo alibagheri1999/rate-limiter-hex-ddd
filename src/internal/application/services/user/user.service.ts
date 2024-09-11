@@ -1,10 +1,9 @@
-import { IUserService, IUserRepository, ICacheRepository } from "../../../ports";
+import { ICacheRepository, IUserRepository, IUserService } from "../../../ports";
 import { CONFIG } from "../../../../deploy";
 import { inject, injectable } from "inversify";
-import { REPOSITORY_RESULT, TYPES } from "../../../domain/types";
+import { RepositoryResult, TYPES } from "../../../domain/types";
 import { User } from "../../../domain/model";
 import { getRandomPhoneNumber } from "../../utils";
-import * as cache from "../../../adapters/cache";
 import { Logger } from "../../utils/log";
 
 @injectable()
@@ -18,16 +17,14 @@ export class UserService implements IUserService {
   }
 
   async getRandomUser(): Promise<User> {
-    let user: REPOSITORY_RESULT<User>
-
     const phoneNumber = getRandomPhoneNumber();
-    const userKey = `user-${phoneNumber}`
-    user = await this.redisCacheRepo.get(userKey)
-    if (user) return user.rows[0]
-    user = await this.pgUserRepo.findUser(phoneNumber);
-    await this.redisCacheRepo.set(userKey, user)
-    if (!user?.success) throw new Error("Something went wrong");
+    const userKey = `user-${phoneNumber}`;
+    const existingUser = await this.redisCacheRepo.get(userKey);
+    if (existingUser) return JSON.parse(existingUser).rows[0];
+    const user: RepositoryResult<User> = await this.pgUserRepo.findUser(phoneNumber);
     if (!user?.rowCount) throw new Error("User not found");
+    if (!user?.success) throw new Error("Something went wrong");
+    await this.redisCacheRepo.set(userKey, JSON.stringify(user));
     return user.rows[0];
   }
 }

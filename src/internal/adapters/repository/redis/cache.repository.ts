@@ -16,15 +16,15 @@ export class RedisCacheRepository implements ICacheRepository {
     this.cache.client = this.cache.client as RedisClientType;
   }
 
-  async get(key: string): Promise<any | null> {
+  async get(key: string): Promise<string | null> {
     return await this.cache.client.get(key);
   }
 
-  async set(key: string, value: any): Promise<void> {
+  async set(key: string, value: string): Promise<void> {
     await this.cache.client.set(key, value);
   }
 
-  async setRateWithTimeout(key: string, value: any): Promise<void> {
+  async setRateWithTimeout(key: string, value: string): Promise<void> {
     try {
       await this.cache.client.set(key, value);
       setTimeout(async () => {
@@ -35,7 +35,7 @@ export class RedisCacheRepository implements ICacheRepository {
     }
   }
 
-  async setWithTimeout(key: string, value: any, time: number): Promise<void> {
+  async setWithTimeout(key: string, value: string, time: number): Promise<void> {
     try {
       await this.cache.client.set(key, value);
       setTimeout(async () => {

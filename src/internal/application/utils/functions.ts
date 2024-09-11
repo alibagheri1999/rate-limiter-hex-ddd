@@ -5,29 +5,15 @@ export const getRandomIntInclusive = function getRandomIntInclusive(min: number,
 };
 
 export const getRandomPhoneNumber = () => {
-  let phoneNumbers: string[] = ["+989352461484","+989352461485","+989352461486","+989352461487","+989352461487","+989352461488","+989352461489"];
-  const randomInt = getRandomIntInclusive(4, 9)
-  return phoneNumbers[randomInt]
-};
-
-export const updateQueryBuilder = (tableName, entity, condition): string => {
-  let query = "UPDATE users";
-
-  delete entity.id;
-  Object.keys(entity).forEach((key, index, total) => {
-    if (index === 0) {
-      query += " SET ";
-    }
-    if (typeof entity[key] === "number" || entity[key] === null) {
-      query += `${key} = ${entity[key]} `;
-    } else {
-      query += `${key} = '${entity[key]}' `;
-    }
-
-    if (index !== total.length - 1) {
-      query += ", ";
-    }
-  });
-  query += condition + ";";
-  return query;
+  let phoneNumbers: string[] = [
+    "+989352461483",
+    "+989352461484",
+    "+989352461485",
+    "+989352461486",
+    "+989352461487",
+    "+989352461488",
+    "+989352461489"
+  ];
+  const randomInt = getRandomIntInclusive(0, 6);
+  return phoneNumbers[randomInt];
 };

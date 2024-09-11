@@ -6,7 +6,7 @@ import { TYPES } from "../../../domain/types";
 
 @injectable()
 export class Redis {
-  public client: any
+  public client: any;
 
   constructor(
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG,
@@ -25,7 +25,7 @@ export class Redis {
       });
 
       redisClient.on("error", (err) => {
-        throw new Error(err.message)
+        throw new Error(err.message);
       });
 
       await redisClient.connect();
@@ -42,8 +42,7 @@ export class Redis {
       );
       throw e;
     }
-  };
-
-  public static async setup(cfg: CONFIG) {
   }
+
+  public static async setup(cfg: CONFIG) {}
 }

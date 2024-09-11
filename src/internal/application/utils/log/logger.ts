@@ -6,9 +6,7 @@ import { LoggerWriter } from "./writer";
 
 @injectable()
 export class Logger {
-  constructor(
-    @inject(TYPES.APP_CONFIG) private cfg: CONFIG
-  ) {}
+  constructor(@inject(TYPES.APP_CONFIG) private cfg: CONFIG) {}
 
   print(prefix: string, error: Error | null, message: string, data: {} | null = null) {
     if (APP_CONFIG.debugMode) {
@@ -27,5 +25,5 @@ export class Logger {
         loggerWriter.writeInfo(prefix, msg);
       }
     }
-  };
+  }
 }

@@ -21,8 +21,8 @@ export class Postgres {
         host: this.cfg.postgresHost,
         port: this.cfg.postgresPort,
         user: this.cfg.postgresUsername,
-        password: this.cfg.postgresPassword,
-        database: this.cfg.postgresDbName
+        password: this.cfg.postgresPassword
+        // database: this.cfg.postgresDbName
       });
 
       pgClient.connect();
@@ -39,8 +39,7 @@ export class Postgres {
       );
       throw e;
     }
-  };
-
-  public static async setup(cfg: CONFIG) {
   }
+
+  public static async setup(cfg: CONFIG) {}
 }

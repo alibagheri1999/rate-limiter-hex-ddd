@@ -4,19 +4,9 @@ import { APP_CONFIG, CONFIG } from "../../deploy";
 import { DocGenerator } from "../doc";
 import { Postgres } from "../../internal/adapters/store";
 import { Migrator } from "@migrations";
-import {
-  HttpServer,
-  Middlewares,
-  Router,
-  UserController,
-  UserRoutes
-} from "../gateway";
+import { HttpServer, Middlewares, Router, UserController, UserRoutes } from "../gateway";
 import { PgUserRepository } from "../../internal/adapters/repository";
-import {
-  IUserController,
-  IUserService,
-  IUserRepository
-} from "../../internal/ports";
+import { IUserController, IUserService, IUserRepository } from "../../internal/ports";
 import { UserService } from "../../internal/application/services";
 import { Logger } from "../../internal/application/utils/log";
 import { Redis } from "../../internal/adapters/cache";

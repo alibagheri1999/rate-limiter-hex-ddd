@@ -28,7 +28,6 @@ export async function bootstrap() {
     await DI.get<Migrator>(TYPES.Migrator).execMigrations(DI.get<Postgres>(TYPES.Postgres));
 
     DI.get<HttpServer>(TYPES.HttpServer).listen();
-
   } catch (e) {
     logger.print(PREFIXES.SERVE, e as Error, (e as Error).message);
   }

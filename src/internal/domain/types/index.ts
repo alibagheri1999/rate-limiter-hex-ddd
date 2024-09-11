@@ -1,4 +1,3 @@
-export * from "./HTTP_STATUS_CODE";
-export * from "./HTTP_STATUS_MESSAGE";
-export * from "./REPOSITORY_RESULT";
+export * from "./httpStatusCode";
+export * from "./repositoryResult";
 export * from "./DI.types";

@@ -1,4 +1,4 @@
-export type REPOSITORY_RESULT<T> = {
+export type RepositoryResult<T> = {
   rows: T[];
   rowCount: number;
   success: Boolean;

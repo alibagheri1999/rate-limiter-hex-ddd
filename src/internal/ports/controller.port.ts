@@ -1,6 +1,5 @@
-import { NextFunction, Request, Response } from "express";
-import { User } from "../domain/model";
+import { Request, Response } from "express";
 
 export interface IUserController {
-  getRandomUser(req: Request, res: Response): Promise<User> ;
+  getRandomUser(req: Request, res: Response): Promise<any>;
 }

@@ -1,9 +1,9 @@
 import { IUserController, IUserService } from "../../../../internal/ports";
-import { NextFunction, Request, Response } from "express";
+import { Request } from "express";
 import { CONFIG } from "../../../../deploy";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../../internal/domain/types";
-import { User } from "../../../../internal/domain/model";
+import { HttpStatusCode, TYPES } from "../../../../internal/domain/types";
+import { ExpressResponse } from "../../../../internal/domain/types/expressResponse";
 
 @injectable()
 export class UserController implements IUserController {
@@ -12,7 +12,16 @@ export class UserController implements IUserController {
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG
   ) {}
 
-  async getRandomUser(_: Request, __: Response): Promise<User> {
-    return await this.userService.getRandomUser()
+  static Setup(userService: IUserService, cfg: CONFIG): UserController {
+    return new UserController(userService, cfg);
   }
+
+  getRandomUser = async (_: Request, res: ExpressResponse) => {
+    try {
+      const user = await this.userService.getRandomUser();
+      return res.success(HttpStatusCode.OK, user, "GET_RANDOM_USER");
+    } catch (e: any) {
+      return res.error(HttpStatusCode.BAD_REQUEST, e.message, e);
+    }
+  };
 }
