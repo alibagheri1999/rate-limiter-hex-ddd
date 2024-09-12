@@ -40,7 +40,7 @@ go to scripts folder
 ```bash
 cd ./src/deploy/scripts
 ```
-Then run run.sh file to run in development mode
+Then run => "run" run.sh file to run in development mode
 
 ```bash
 bash run.sh run
