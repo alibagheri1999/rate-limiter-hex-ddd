@@ -1,11 +1,10 @@
-# Use root/example as user/password credentials
 version: '3'
 services:
   core:
     container_name: core
     command: npm run start:prod
     image: core
-#    restart: always
+    restart: always
     environment:
       HTTP_SERVER_LOCAL_PORT: ${HTTP_SERVER_LOCAL_PORT:-3000}
       PG_HOST: ${PG_HOST:-postgres}
@@ -28,7 +27,7 @@ services:
       - "postgres"
       - "redis"
     networks:
-      - api
+      - core
   postgres:
     image: postgres
     environment:
@@ -41,16 +40,16 @@ services:
     volumes:
       - POSTGRES_DB_DATA:/var/lib/postgresql/data
     networks:
-      api:
+      core:
   redis:
     image: redis:latest
     container_name: redis
     ports:
       - "6379:6379"
     networks:
-      api:
+      core:
 volumes:
   POSTGRES_DB_DATA:
 
 networks:
-  api:
+  core:

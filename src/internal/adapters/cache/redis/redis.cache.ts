@@ -8,12 +8,16 @@ import { TYPES } from "../../../domain/types";
 @injectable()
 export class Redis {
   public client: any;
+  public isRedisConnected: boolean;
 
   constructor(
     @inject(TYPES.APP_CONFIG) private cfg: CONFIG,
     @inject(TYPES.Logger) private logger: Logger
   ) {
     this.connect().then().catch();
+  }
+
+  public static async setup(cfg: CONFIG) {
   }
 
   async connect() {
@@ -25,14 +29,14 @@ export class Redis {
         }
       });
 
-      redisClient.on("error", async (err) => {
-        await delay(5000);
-        this.logger.print(
-          PREFIXES.REDIS,
-          err as Error,
-          "error occurred while connecting redis instance",
-          err.message
-        );
+      redisClient.on("ready", () => {
+        this.isRedisConnected = true;
+      });
+      redisClient.on("error", async (_: any) => {
+        this.isRedisConnected = false;
+      });
+      redisClient.on("end", () => {
+        this.isRedisConnected = false;
       });
 
       await redisClient.connect();
@@ -50,6 +54,4 @@ export class Redis {
       );
     }
   }
-
-  public static async setup(cfg: CONFIG) {}
 }

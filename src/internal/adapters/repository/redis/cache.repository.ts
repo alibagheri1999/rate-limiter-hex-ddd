@@ -14,9 +14,6 @@ export class RedisCacheRepository implements ICacheRepository {
     this.cache.client = this.cache.client as RedisClientType;
   }
 
-  private timeoutPromise = (timeout: number) =>
-    new Promise((_, reject) => setTimeout(() => reject(new Error("Operation timed out")), timeout));
-
   async get(key: string): Promise<string | null> {
     if (!(await this.ping())) return null;
     return await this.cache.client.get(key);
@@ -45,12 +42,6 @@ export class RedisCacheRepository implements ICacheRepository {
   }
 
   private async ping(): Promise<boolean> {
-    try {
-      let pong = this.cache.client.ping();
-      pong = await Promise.race([pong, this.timeoutPromise(5000)]);
-      return pong === "PONG";
-    } catch (e) {
-      return false;
-    }
+    return this.cache.isRedisConnected;
   }
 }
