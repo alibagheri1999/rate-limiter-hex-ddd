@@ -10,6 +10,7 @@ import { ExpressRequest } from "../../../../internal/domain/types/expressRequest
 import { ApiResponse } from "../../../../internal/domain/types/globalResponse";
 import { HttpStatusMessage } from "../../../../internal/domain/types/httpStatusMessage";
 import { ExpressError } from "../../../../internal/domain/types/expressError";
+import { requestSender } from "../../../../internal/application/utils";
 
 @injectable()
 export class HttpServer {
@@ -34,7 +35,7 @@ export class HttpServer {
             message: HttpStatusMessage.NOT_FOUND,
             error: "API_NOT_FOUND"
           };
-          res.status(HttpStatusCode.NOT_FOUND).json(response);
+          requestSender(res, response, HttpStatusCode.NOT_FOUND);
         })
         .use(
           (
@@ -48,9 +49,11 @@ export class HttpServer {
               message: HttpStatusMessage.INTERNAL_SERVER_ERROR,
               error: error.message
             };
-            res
-              .status(error?.status ? error.status : HttpStatusCode.INTERNAL_SERVER_ERROR)
-              .json(response);
+            requestSender(
+              res,
+              response,
+              error?.status ? error.status : HttpStatusCode.INTERNAL_SERVER_ERROR
+            );
           }
         )
     );

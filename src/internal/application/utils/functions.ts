@@ -1,3 +1,7 @@
+import { Response } from "express";
+import { ApiResponse } from "../../domain/types/globalResponse";
+import { HttpStatusCode } from "../../domain/types";
+
 export const getRandomIntInclusive = function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -17,3 +21,11 @@ export const getRandomPhoneNumber = () => {
   const randomInt = getRandomIntInclusive(0, 6);
   return phoneNumbers[randomInt];
 };
+
+export function requestSender(
+  response: Response,
+  payload: ApiResponse<any>,
+  status: HttpStatusCode
+) {
+  return response.status(status).json(payload);
+}

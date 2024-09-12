@@ -1,76 +1,92 @@
-import { Request, Response, NextFunction } from "express";
+// Mocking the RedisCacheRepository
+import { rateLimitHandler } from "../../cmd/gateway/http/middlewares/rateLimiter.middleware";
 import { CONFIG } from "../../deploy";
-import { rateLimiter } from "../../cmd/gateway/http/middlewares/rateLimiter.middleware";
-import { RedisCacheRepository } from "../../internal/adapters/repository/redis/cache.repository";
+import { ApiResponse } from "../../internal/domain/types/globalResponse";
+import { HttpStatusMessage } from "../../internal/domain/types/httpStatusMessage";
 import { HttpStatusCode } from "../../internal/domain/types";
 
-jest.mock("../../internal/adapters/repository/redis/cache.repository");
-jest.mock("../../deploy", () => ({
-  CONFIG: {
-    maxRateLimit: 5,
-    rateLimitTime: 60
-  }
-}));
+const mockRedisRepo = {
+  get: jest.fn(),
+  setWithTimeout: jest.fn()
+};
 
-const mockRedisRepo = RedisCacheRepository.prototype;
-let mockConfig: CONFIG;
+// Mocking the response and requestSender function
+const mockResponse = {};
+const requestSender = jest.fn();
 
-describe("rateLimiter middleware", () => {
-  let req: Partial<Request>;
-  let res: Partial<Response>;
-  let next: NextFunction;
+// Mocking the CONFIG object
+const mockConfig = {
+  maxRateLimit: 5,
+  rateLimitTime: 1 // in minutes
+};
 
+describe("rateLimitHandler", () => {
   beforeEach(() => {
-    req = { headers: { "user-id": "test-user" } };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    next = jest.fn();
+    jest.clearAllMocks();
   });
 
-  it("should allow the request if rate limit is not exceeded", async () => {
-    mockRedisRepo.get = jest.fn().mockResolvedValue("2"); // Simulate 2 requests so far
-    mockRedisRepo.setWithTimeout = jest.fn().mockResolvedValue(null);
+  it("should allow the request if the rate limit has not been exceeded", async () => {
+    mockRedisRepo.get.mockResolvedValueOnce("2"); // current request count is 2
 
-    await rateLimiter(req as Request, res as Response, next);
+    await rateLimitHandler(
+      "user123",
+      mockRedisRepo as any,
+      mockConfig as CONFIG,
+      mockResponse as any
+    );
 
-    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:test-user");
+    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:user123");
     expect(mockRedisRepo.setWithTimeout).toHaveBeenCalledWith(
-      "rate-limit:test-user",
+      "rate-limit:user123",
       "3",
       mockConfig.rateLimitTime
     );
-    expect(next).toHaveBeenCalled();
-    expect(res.status).not.toHaveBeenCalled(); // No response sent yet
+    expect(requestSender).not.toHaveBeenCalled(); // request should not be blocked
   });
 
-  it("should block the request if rate limit is exceeded", async () => {
-    mockRedisRepo.get = jest.fn().mockResolvedValue("5"); // Simulate 5 requests already made
+  it("should block the request if the rate limit has been exceeded", async () => {
+    mockRedisRepo.get.mockResolvedValueOnce("5"); // current request count is 5, equal to maxRateLimit
 
-    await rateLimiter(req as Request, res as Response, next);
+    await rateLimitHandler(
+      "user123",
+      mockRedisRepo as any,
+      mockConfig as CONFIG,
+      mockResponse as any
+    );
 
-    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:test-user");
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.TOO_MANY_REQUESTS);
-    expect(res.json).toHaveBeenCalledWith({
+    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:user123");
+    expect(mockRedisRepo.setWithTimeout).not.toHaveBeenCalled(); // no need to increment since the limit is exceeded
+
+    const expectedPayload: ApiResponse<null> = {
       success: false,
-      error: "TOO_MANY_REQUESTS",
-      message: "You have exceeded the 5 requests in 3600 seconds limit!"
-    });
-    expect(next).not.toHaveBeenCalled(); // next() should not be called if rate limit exceeded
+      error: HttpStatusMessage.TOO_MANY_REQUESTS,
+      message: `You have exceeded the ${mockConfig.maxRateLimit} requests in ${
+        mockConfig.rateLimitTime * 60
+      } seconds limit!`
+    };
+    expect(requestSender).toHaveBeenCalledWith(
+      mockResponse,
+      expectedPayload,
+      HttpStatusCode.TOO_MANY_REQUESTS
+    );
   });
 
-  it("should handle errors thrown by Redis", async () => {
-    mockRedisRepo.get = jest.fn().mockRejectedValue(new Error("Redis error"));
+  it("should handle the case when no prior requests have been made (request count is null)", async () => {
+    mockRedisRepo.get.mockResolvedValueOnce(null); // no prior request count
 
-    await rateLimiter(req as Request, res as Response, next);
+    await rateLimitHandler(
+      "user123",
+      mockRedisRepo as any,
+      mockConfig as CONFIG,
+      mockResponse as any
+    );
 
-    expect(res.status).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR);
-    expect(res.json).toHaveBeenCalledWith({
-      success: false,
-      message: "Redis error",
-      error: "INTERNAL_SERVER_ERROR"
-    });
-    expect(next).not.toHaveBeenCalled(); // next() should not be called if there's an error
+    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:user123");
+    expect(mockRedisRepo.setWithTimeout).toHaveBeenCalledWith(
+      "rate-limit:user123",
+      "1",
+      mockConfig.rateLimitTime
+    ); // first request
+    expect(requestSender).not.toHaveBeenCalled(); // request should not be blocked
   });
 });

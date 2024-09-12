@@ -6,6 +6,7 @@ import { HttpStatusMessage } from "../../../../internal/domain/types/httpStatusM
 import { CONFIG } from "../../../../deploy";
 import { ApiResponse } from "../../../../internal/domain/types/globalResponse";
 import { nullableStrings } from "../../../../internal/domain/types/strings";
+import { requestSender } from "../../../../internal/application/utils";
 
 export const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -48,12 +49,4 @@ export async function rateLimitHandler(
     return requestSender(response, payload, HttpStatusCode.TOO_MANY_REQUESTS);
   }
   await redisRepo.setWithTimeout(key, String(count + 1), cfg.rateLimitTime);
-}
-
-export function requestSender(
-  response: Response,
-  payload: ApiResponse<null>,
-  status: HttpStatusCode
-) {
-  return response.status(status).json(payload);
 }

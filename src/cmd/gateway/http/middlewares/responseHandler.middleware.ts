@@ -1,6 +1,7 @@
-import { Request, NextFunction } from "express";
+import { NextFunction, Request } from "express";
 import { ApiResponse } from "../../../../internal/domain/types/globalResponse";
 import { HttpStatusCode } from "../../../../internal/domain/types";
+import { requestSender } from "../../../../internal/application/utils";
 
 const responseHandler = (_: Request, res: any, next: NextFunction) => {
   res.success = (statusCode: HttpStatusCode, data: any, message?: string) => {
@@ -9,7 +10,7 @@ const responseHandler = (_: Request, res: any, next: NextFunction) => {
       data,
       message
     };
-    return res.status(statusCode).json(response);
+    return requestSender(res, response, statusCode);
   };
 
   res.error = (statusCode: HttpStatusCode, message: string, error?: any) => {
@@ -18,7 +19,7 @@ const responseHandler = (_: Request, res: any, next: NextFunction) => {
       message,
       error
     };
-    return res.status(statusCode).json(response);
+    return requestSender(res, response, statusCode);
   };
 
   next();

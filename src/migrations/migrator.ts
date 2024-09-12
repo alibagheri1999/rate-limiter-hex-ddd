@@ -37,7 +37,8 @@ export class Migrator {
         host: this.cfg.postgresHost,
         port: this.cfg.postgresPort,
         user: this.cfg.postgresUsername,
-        password: this.cfg.postgresPassword
+        password: this.cfg.postgresPassword,
+        database: this.cfg.postgresDbName
       });
 
       await client.connect();
