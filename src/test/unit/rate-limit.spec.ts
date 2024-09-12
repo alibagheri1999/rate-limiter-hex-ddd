@@ -1,4 +1,3 @@
-// Mocking the RedisCacheRepository
 import { rateLimitHandler } from "../../cmd/gateway/http/middlewares/rateLimiter.middleware";
 import { CONFIG } from "../../deploy";
 import { ApiResponse } from "../../internal/domain/types/globalResponse";
@@ -10,14 +9,14 @@ const mockRedisRepo = {
   setWithTimeout: jest.fn()
 };
 
-// Mocking the response and requestSender function
-const mockResponse = {};
-const requestSender = jest.fn();
+const mockResponse = {
+  status: jest.fn().mockReturnThis(),
+  json: jest.fn()
+};
 
-// Mocking the CONFIG object
 const mockConfig = {
   maxRateLimit: 5,
-  rateLimitTime: 1 // in minutes
+  rateLimitTime: 1
 };
 
 describe("rateLimitHandler", () => {
@@ -26,36 +25,37 @@ describe("rateLimitHandler", () => {
   });
 
   it("should allow the request if the rate limit has not been exceeded", async () => {
-    mockRedisRepo.get.mockResolvedValueOnce("2"); // current request count is 2
+    mockRedisRepo.get.mockResolvedValueOnce("2");
 
     await rateLimitHandler(
-      "user123",
+      "{{RANDOM_PHONE_NUMBER}}",
       mockRedisRepo as any,
       mockConfig as CONFIG,
       mockResponse as any
     );
 
-    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:user123");
+    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:{{RANDOM_PHONE_NUMBER}}");
     expect(mockRedisRepo.setWithTimeout).toHaveBeenCalledWith(
-      "rate-limit:user123",
+      "rate-limit:{{RANDOM_PHONE_NUMBER}}",
       "3",
       mockConfig.rateLimitTime
     );
-    expect(requestSender).not.toHaveBeenCalled(); // request should not be blocked
+    expect(mockResponse.status).not.toHaveBeenCalled();
+    expect(mockResponse.json).not.toHaveBeenCalled();
   });
 
   it("should block the request if the rate limit has been exceeded", async () => {
-    mockRedisRepo.get.mockResolvedValueOnce("5"); // current request count is 5, equal to maxRateLimit
+    mockRedisRepo.get.mockResolvedValueOnce("5");
 
     await rateLimitHandler(
-      "user123",
+      "{{RANDOM_PHONE_NUMBER}}",
       mockRedisRepo as any,
       mockConfig as CONFIG,
       mockResponse as any
     );
 
-    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:user123");
-    expect(mockRedisRepo.setWithTimeout).not.toHaveBeenCalled(); // no need to increment since the limit is exceeded
+    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:{{RANDOM_PHONE_NUMBER}}");
+    expect(mockRedisRepo.setWithTimeout).not.toHaveBeenCalled();
 
     const expectedPayload: ApiResponse<null> = {
       success: false,
@@ -64,29 +64,27 @@ describe("rateLimitHandler", () => {
         mockConfig.rateLimitTime * 60
       } seconds limit!`
     };
-    expect(requestSender).toHaveBeenCalledWith(
-      mockResponse,
-      expectedPayload,
-      HttpStatusCode.TOO_MANY_REQUESTS
-    );
+    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.TOO_MANY_REQUESTS);
+    expect(mockResponse.json).toHaveBeenCalledWith(expectedPayload);
   });
 
   it("should handle the case when no prior requests have been made (request count is null)", async () => {
-    mockRedisRepo.get.mockResolvedValueOnce(null); // no prior request count
+    mockRedisRepo.get.mockResolvedValueOnce(null);
 
     await rateLimitHandler(
-      "user123",
+      "{{RANDOM_PHONE_NUMBER}}",
       mockRedisRepo as any,
       mockConfig as CONFIG,
       mockResponse as any
     );
 
-    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:user123");
+    expect(mockRedisRepo.get).toHaveBeenCalledWith("rate-limit:{{RANDOM_PHONE_NUMBER}}");
     expect(mockRedisRepo.setWithTimeout).toHaveBeenCalledWith(
-      "rate-limit:user123",
+      "rate-limit:{{RANDOM_PHONE_NUMBER}}",
       "1",
       mockConfig.rateLimitTime
-    ); // first request
-    expect(requestSender).not.toHaveBeenCalled(); // request should not be blocked
+    );
+    expect(mockResponse.status).not.toHaveBeenCalled();
+    expect(mockResponse.json).not.toHaveBeenCalled();
   });
 });

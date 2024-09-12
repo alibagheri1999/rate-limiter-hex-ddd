@@ -1,19 +1,3 @@
-# Thanos
-
-Thanos is a highly scalable and robust base project, designed and developed using Node.js, Express, Hexagonal Architecture, and SOLID principles. It comes with pre-configured support for WebSocket, gRPC, and GraphQL to provide seamless communication and data management in modern applications.
-
-![Hexagonal Architecture](https://github.com/moein9gh/Thanos/blob/main/hexagonal-arch.png?raw=true)
-
-## Table of Contents
-
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
-- [Tests](#tests)
-- [Contributing](#contributing)
-
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [Installation](#installation) for notes on how to deploy the project on a live system.
@@ -28,16 +12,27 @@ You can download and install Docker from the [official Docker website](https://d
 
 ## Installation
 
-Clone the project repository:
-
-```bash
-git clone https://github.com/moein9gh/thanos.git
-```
-
 Navigate to the project directory:
 
 ```bash
-cd thanos
+cd rate-limiter
+```
+
+## Notice!!!
+if you dont have docker engine running on your local machine do these steps:
+### create .env from .env.exaple and change the env file
+```bash
+cd ./src/deploy/env
+```
+### run the script
+```bash
+npm run start:prod
+```
+
+## Running the docker file
+in the root of project
+```bash
+npm run docker:build
 ```
 
 ## Running the Application
@@ -48,17 +43,17 @@ cd ./src/deploy/scripts
 Then run run.sh file to run in development mode
 
 ```bash
-./run.sh
+bash run.sh run
 ```
-run log.sh file to see logs
+run => "log" run.sh file to see logs
 
 ```bash
-./log.sh
+bash run.sh log
 ```
-run down.sh file to makes containers down 
+run => "down" run.sh file to makes containers down 
 
 ```bash
-./down.sh
+bash run.sh down
 ```
 * Please make sure that .sh files in scripts folder have right permissions for execution.
 
@@ -119,7 +114,3 @@ To run the test suite, execute the following command:
 ```bash
 npm run test
 ```
-
-## Contributing
-
-Contributions are always welcome! Feel free to submit a pull request, create an issue, or get in touch with the project maintainer moein9gh to discuss new ideas or improvements.

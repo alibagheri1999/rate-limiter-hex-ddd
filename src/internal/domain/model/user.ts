@@ -2,7 +2,7 @@ import { UserEntity } from "../entity";
 
 export class User {
   constructor(
-    public id: string,
+    public id: number,
     public phoneNumber: string,
     public username: string,
     public createdOn: Date,

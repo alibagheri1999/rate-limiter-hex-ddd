@@ -6,10 +6,9 @@
  *     tags: [Users(get)]
  *     parameters:
  *       - in: header
- *         name: user-id
+ *         name: "user-id"
  *         schema:
  *           type: strings.ts
- *         required: true
  *         description: The user id
  *     responses:
  *       200:

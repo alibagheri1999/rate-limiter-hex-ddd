@@ -23,7 +23,7 @@ export class Migrator {
         const query = fs.readFileSync(path.resolve("src", "migrations", fn)).toString();
         await store.client.query(query);
         this.logger.print(PREFIXES.MIGRATOR, null, `${fn} migration executed`);
-      }catch (e: any) {
+      } catch (e: any) {
         this.logger.print(PREFIXES.MIGRATOR, e as Error, e?.message);
       }
     }

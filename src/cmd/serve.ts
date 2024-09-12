@@ -7,7 +7,7 @@ import { HttpServer } from "./gateway";
 import { Logger, PREFIXES } from "../internal/application/utils/log";
 import { DI } from "./DI";
 import { TYPES } from "../internal/domain/types";
-import { Migrator } from "@migrations";
+import { Migrator } from "../migrations";
 import { Postgres } from "../internal/adapters/store";
 import { CONFIG } from "../deploy";
 
@@ -16,7 +16,7 @@ dotenv.config({
 });
 
 export async function bootstrap() {
-    const logger = DI.get<Logger>(TYPES.Logger);
+  const logger = DI.get<Logger>(TYPES.Logger);
   try {
     const cfg = DI.get<CONFIG>(TYPES.APP_CONFIG);
 

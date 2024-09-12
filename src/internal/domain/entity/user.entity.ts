@@ -4,7 +4,7 @@ new Date().toISOString();
 
 export class UserEntity {
   constructor(
-    public id: string,
+    public id: number,
     public phone_number: string,
     public username: string,
     public created_on: string,

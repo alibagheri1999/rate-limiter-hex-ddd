@@ -3,7 +3,7 @@ import { TYPES } from "../../internal/domain/types";
 import { APP_CONFIG, CONFIG } from "../../deploy";
 import { DocGenerator } from "../doc";
 import { Postgres } from "../../internal/adapters/store";
-import { Migrator } from "@migrations";
+import { Migrator } from "../../migrations";
 import { HttpServer, Middlewares, Router, UserController, UserRoutes } from "../gateway";
 import { PgUserRepository } from "../../internal/adapters/repository";
 import { IUserController, IUserService, IUserRepository } from "../../internal/ports";
