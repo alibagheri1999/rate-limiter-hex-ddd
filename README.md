@@ -62,49 +62,124 @@ bash run.sh down
 Below is an overview of the project structure:
 
 ```
-Thanos/
-│
-├── .husky/                       # Husky Git hooks configuration folder
-│
-├── src/                          # Source code folder
-│   ├── DI/                       # Dependency Injection folder
-│   ├── bin/                      # Binary folder, possibly containing scripts or executables
-│   ├── config/                   # Configuration files folder
-│   ├── doc/                      # Documentation folder
-│   ├── docker/                   # Docker-related files folder
-│   ├── dto/                      # Data Transfer Objects folder
-│   ├── entity/                   # Entity folder, for defining domain entities
-│   ├── env/                      # Environment configuration folder
-│   ├── gateway/                  # Gateway folder, for external communication and services
-│   ├── interactor/               # Interactor folder, for use cases and application logic
-│   ├── locales/                  # Localization folder, containing translations or localization configs
-│   ├── log/                      # Logging folder, for log files and logging configuration
-│   ├── migrations/               # Database migrations folder
-│   ├── model/                    # Model folder, for domain models
-│   ├── ports/                    # Ports folder, for defining interfaces and adapters
-│   ├── protos/                   # Protocol Buffers folder, for defining gRPC services
-│   ├── repository/               # Repository folder, for data access and persistence
-│   ├── schema/                   # Schema folder, for defining data schemas or validation
-│   ├── static/                   # Static assets folder
-│   ├── store/                    # Store folder, for managing application database's
-│   ├── test/                     # Test folder
-│   ├── types/                    # TypeScript types folder
-│   └── utils/                    # Utility functions folder
-│
-├── .eslintignore                 # ESLint ignore configuration file
-├── .eslintrc                     # ESLint configuration file
-├── .gitignore                    # Git ignore configuration file
-├── .prettierrc                   # Prettier configuration file
-│
-├── CleanArchitecture.jpg         # Clean Architecture illustration file
-├── commitlint.config.js          # Commitlint configuration file
-├── docker-compose.yml            # Docker Compose configuration file
-├── jest.config.ts                # Jest configuration file
-├── package-lock.json             # Dependency lock file for npm
-├── package.json                  # Package.json file for npm project
-├── tsconfig-build.json           # TypeScript build configuration file
-└── tsconfig.json                 # TypeScript configuration file
-
+rate-limit/
+├── src/
+│   ├── cmd/
+│   │   ├── DI/
+│   │   │   ├── index.ts
+│   │   │   └── inversify.config.ts
+│   │   ├── doc/
+│   │   │   ├── generator.ts
+│   │   │   ├── index.ts
+│   │   │   └── swagger/
+│   │   │       ├── routes.js
+│   │   │       └── schema.js
+│   │   ├── gateway/
+│   │   │   ├── http/
+│   │   │   │   ├── controllers/
+│   │   │   │   │   ├── api.http
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── user.controller.ts
+│   │   │   │   ├── middlewares/
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── rateLimiter.middleware.ts
+│   │   │   │   │   └── responseHandler.middleware.ts
+│   │   │   │   ├── routes/
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── user.routes.ts
+│   │   │   │   ├── router/
+│   │   │   │   │   └── index.ts
+│   │   │   │   └── server/
+│   │   │   │       └── index.ts
+│   │   │   └── index.ts
+│   │   ├── index.ts
+│   │   ├── pathResolver.ts
+│   │   └── serve.ts
+│   ├── deploy/
+│   │   ├── config.ts
+│   │   ├── env/
+│   │   │   ├── environment.d.ts
+│   │   │   ├── .env
+│   │   │   └── sample.env
+│   │   ├── index.ts
+│   │   ├── scripts/
+│   │   │   ├── dev-docker-compose.yml
+│   │   │   └── run.sh
+│   │   └── type.ts
+│   ├── internal/
+│   │   ├── adapters/
+│   │   │   ├── cache/
+│   │   │   │   ├── index.ts
+│   │   │   │   └── redis/
+│   │   │   │       └── redis.cache.ts
+│   │   │   ├── repository/
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── postgres/
+│   │   │   │   │   └── user.repository.ts
+│   │   │   │   └── redis/
+│   │   │   │       └── cache.repository.ts
+│   │   │   └── store/
+│   │   │       ├── index.ts
+│   │   │       └── postgres/
+│   │   │           └── postgres.store.ts
+│   │   ├── application/
+│   │   │   ├── services/
+│   │   │   │   ├── index.ts
+│   │   │   │   └── user/
+│   │   │   │       ├── index.ts
+│   │   │   │       └── user.service.ts
+│   │   │   └── utils/
+│   │   │       ├── functions.ts
+│   │   │       ├── index.ts
+│   │   │       └── log/
+│   │   │           ├── index.ts
+│   │   │           ├── logger.ts
+│   │   │           ├── prefix.ts
+│   │   │           └── writer.ts
+│   │   ├── domain/
+│   │   │   ├── dto/
+│   │   │   │   └── index.ts
+│   │   │   ├── entity/
+│   │   │   │   ├── index.ts
+│   │   │   │   └── user.entity.ts
+│   │   │   ├── model/
+│   │   │   │   ├── index.ts
+│   │   │   │   └── user.ts
+│   │   │   └── types/
+│   │   │       ├── DI.types.ts
+│   │   │       ├── expressError.ts
+│   │   │       ├── expressRequest.ts
+│   │   │       ├── expressResponse.ts
+│   │   │       ├── globalResponse.ts
+│   │   │       ├── httpRoutes.ts
+│   │   │       ├── httpStatusCode.ts
+│   │   │       ├── httpStatusMessage.ts
+│   │   │       ├── index.ts
+│   │   │       ├── repositoryResult.ts
+│   │   │       ├── request.d.ts
+│   │   │       └── strings.ts
+│   │   └── ports/
+│   │       ├── cacheRepository.port.ts
+│   │       ├── controller.port.ts
+│   │       ├── index.ts
+│   │       ├── repository.port.ts
+│   │       ├── routes.port.ts
+│   │       ├── store.port.ts
+│   │       ├── user.service.port.ts
+│   │       └── userRepository.port.ts
+│   ├── migrations/
+│   │   ├── 0_add_users_table.sql
+│   │   ├── 1_add_random_users.sql
+│   │   ├── index.ts
+│   │   └── migrator.ts
+│   ├── test/
+│   │   ├── serve.ts
+│   │   ├── unit/
+│   │   │   ├── rate-limit.spec.ts
+│   │   │   └── user-service.spec.ts
+│   │   └── ...
+│   └── ...
+└── README.md
 ```
 
 ## Tests

@@ -19,7 +19,7 @@ const mockConfig = {
 const sampleUser = {
   id: 1,
   username: "John Doe",
-  phoneNumber: "{{RANDOM_PHONE_NUMBER}}",
+  phoneNumber: "{{RANDOM_PHONE_NUMBER}}"
 };
 
 const mockUserRepoResult: RepositoryResult<User> = {
@@ -76,7 +76,9 @@ describe("UserService - getRandomUser", () => {
       rows: []
     });
 
-    await expect(userService.getRandomUser("{{RANDOM_PHONE_NUMBER}}")).rejects.toThrow("User not found");
+    await expect(userService.getRandomUser("{{RANDOM_PHONE_NUMBER}}")).rejects.toThrow(
+      "User not found"
+    );
 
     expect(mockRedisCacheRepo.get).toHaveBeenCalledWith("user-{{RANDOM_PHONE_NUMBER}}");
     expect(mockPgUserRepo.findUser).toHaveBeenCalledWith("{{RANDOM_PHONE_NUMBER}}");

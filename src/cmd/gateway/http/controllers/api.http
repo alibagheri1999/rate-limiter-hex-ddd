@@ -1,0 +1,3 @@
+### Get User Data
+GET http://localhost:3000/api/users/data
+user-id: 1

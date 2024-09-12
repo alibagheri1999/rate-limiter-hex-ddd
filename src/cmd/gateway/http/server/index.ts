@@ -1,16 +1,12 @@
-import express, { Response } from "express";
+import express from "express";
 import http from "http";
 import { Middlewares, Router, UserRoutes } from "../../index";
 import { CONFIG } from "../../../../deploy";
 import { Logger, PREFIXES } from "../../../../internal/application/utils/log";
 import { inject, injectable } from "inversify";
-import { HttpStatusCode, TYPES } from "../../../../internal/domain/types";
+import { TYPES } from "../../../../internal/domain/types";
 import { HttpRoutes } from "../../../../internal/domain/types/httpRoutes";
-import { ExpressRequest } from "../../../../internal/domain/types/expressRequest";
-import { ApiResponse } from "../../../../internal/domain/types/globalResponse";
-import { HttpStatusMessage } from "../../../../internal/domain/types/httpStatusMessage";
-import { ExpressError } from "../../../../internal/domain/types/expressError";
-import { requestSender } from "../../../../internal/application/utils";
+import { errorMiddleware, globalMiddleware } from "../middlewares/error.middleware";
 
 @injectable()
 export class HttpServer {
@@ -29,33 +25,8 @@ export class HttpServer {
       express()
         .use(HttpRoutes.ROOT_PREFIX, this.rootRouter.getRouter())
         .use(HttpRoutes.USER_PREFIX, this.userRoutes.router.getRouter())
-        .use((_: ExpressRequest, res: Response, next: express.NextFunction) => {
-          const response: ApiResponse<null> = {
-            success: false,
-            message: HttpStatusMessage.NOT_FOUND,
-            error: "API_NOT_FOUND"
-          };
-          requestSender(res, response, HttpStatusCode.NOT_FOUND);
-        })
-        .use(
-          (
-            error: ExpressError,
-            _: express.Request,
-            res: express.Response,
-            next: express.NextFunction
-          ) => {
-            const response: ApiResponse<null> = {
-              success: false,
-              message: HttpStatusMessage.INTERNAL_SERVER_ERROR,
-              error: error.message
-            };
-            requestSender(
-              res,
-              response,
-              error?.status ? error.status : HttpStatusCode.INTERNAL_SERVER_ERROR
-            );
-          }
-        )
+        .use(globalMiddleware)
+        .use(errorMiddleware)
     );
   }
 
