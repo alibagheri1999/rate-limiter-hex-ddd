@@ -25,8 +25,8 @@ export class Redis {
         }
       });
 
-      redisClient.on("error", async(err) => {
-        await delay(5000)
+      redisClient.on("error", async (err) => {
+        await delay(5000);
         this.logger.print(
           PREFIXES.REDIS,
           err as Error,
@@ -41,7 +41,7 @@ export class Redis {
 
       this.logger.print(PREFIXES.REDIS, null, "Connected successfully to redis cache");
     } catch (e) {
-      await delay(5000)
+      await delay(5000);
       this.logger.print(
         PREFIXES.REDIS,
         e as Error,

@@ -18,8 +18,8 @@ Navigate to the project directory:
 cd rate-limiter
 ```
 
-## Notice!!!
-if you dont have docker engine running on your local machine do these steps:
+## Notices!!!
+if you don't have docker engine running on your local machine do these steps:
 ### create .env from .env.exaple and change the env file
 ```bash
 cd ./src/deploy/env

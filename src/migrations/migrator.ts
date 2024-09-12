@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { Logger, PREFIXES } from "../internal/application/utils/log";
-import { Client } from "pg";
 import { CONFIG } from "../deploy";
 import { Postgres } from "../internal/adapters/store";
 import { TYPES } from "../internal/domain/types";

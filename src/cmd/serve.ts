@@ -1,7 +1,3 @@
-/*
-    resolve default defined paths in package.json
-*/
-
 import * as dotenv from "dotenv";
 import { HttpServer } from "./gateway";
 import { Logger, PREFIXES } from "../internal/application/utils/log";
