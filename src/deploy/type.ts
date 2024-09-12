@@ -4,7 +4,6 @@ export type CONFIG = {
   cachePort: number;
   cacheHost: string;
   httpServerPort: number;
-  logFormat: string;
   postgresHost: string;
   postgresPort: number;
   postgresDbName: string;
@@ -16,4 +15,5 @@ export type CONFIG = {
   rateLimitTime: number;
   maxRateLimit: number;
   maxLogFileSize: number;
+  cacheDuration: number;
 };

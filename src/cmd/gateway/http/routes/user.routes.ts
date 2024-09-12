@@ -1,6 +1,5 @@
 import { IUserController } from "../../../../internal/ports";
 import { Router } from "../router";
-import { CONFIG } from "../../../../deploy";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../internal/domain/types";
 import { HttpRoutes } from "../../../../internal/domain/types/httpRoutes";
@@ -9,8 +8,7 @@ import { HttpRoutes } from "../../../../internal/domain/types/httpRoutes";
 export class UserRoutes {
   constructor(
     @inject(TYPES.UserController) private userController: IUserController,
-    @inject(TYPES.UserRouter) public router: Router,
-    @inject(TYPES.APP_CONFIG) private cfg: CONFIG
+    @inject(TYPES.UserRouter) public router: Router
   ) {}
   registerRoutes(): Router {
     const expressRouter = this.router.getRouter();

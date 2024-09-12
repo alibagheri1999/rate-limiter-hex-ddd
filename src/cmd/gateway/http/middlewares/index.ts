@@ -2,7 +2,6 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
-import { CONFIG } from "../../../../deploy";
 import { Router } from "../router";
 import { Logger, PREFIXES } from "../../../../internal/application/utils/log";
 import swaggerUi from "swagger-ui-express";
@@ -16,7 +15,6 @@ import responseHandler from "./responseHandler.middleware";
 export class Middlewares {
   constructor(
     @inject(TYPES.RootRouter) private router: Router,
-    @inject(TYPES.APP_CONFIG) private cfg: CONFIG,
     @inject(TYPES.DocGenerator) private docGenerator: DocGenerator,
     @inject(TYPES.Logger) private logger: Logger
   ) {}

@@ -35,7 +35,6 @@ export class HttpServer {
             error: "API_NOT_FOUND"
           };
           res.status(HttpStatusCode.NOT_FOUND).json(response);
-          next();
         })
         .use(
           (
@@ -52,7 +51,6 @@ export class HttpServer {
             res
               .status(error?.status ? error.status : HttpStatusCode.INTERNAL_SERVER_ERROR)
               .json(response);
-            next();
           }
         )
     );

@@ -16,6 +16,7 @@ declare global {
       RATE_LIMIT_TIME_MIN: number;
       MAX_RATE_LIMIT: number;
       MAX_LOG_FILE_SIZE: number;
+      CACHE_DURATION: number;
       REDIS_PORT: number;
       REDIS_HOST: string;
     }

@@ -1,5 +1,5 @@
 import { User } from "../domain/model";
 
 export interface IUserService {
-  getRandomUser(): Promise<User>;
+  getRandomUser(phoneNumber: string): Promise<User>;
 }

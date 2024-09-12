@@ -1,6 +1,5 @@
 import * as store from "../../store";
 import { IUserRepository } from "../../../ports";
-import { CONFIG } from "../../../../deploy";
 import { UserEntity } from "../../../domain/entity";
 import { User } from "../../../domain/model";
 import { RepositoryResult, TYPES } from "../../../domain/types";
@@ -8,10 +7,7 @@ import { inject, injectable } from "inversify";
 
 @injectable()
 export class PgUserRepository implements IUserRepository {
-  constructor(
-    @inject(TYPES.Postgres) private store: store.Postgres,
-    @inject(TYPES.APP_CONFIG) private cfg: CONFIG
-  ) {}
+  constructor(@inject(TYPES.Postgres) private store: store.Postgres) {}
 
   async findUser(phoneNumber: string): Promise<RepositoryResult<User>> {
     try {
