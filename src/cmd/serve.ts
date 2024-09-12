@@ -9,23 +9,20 @@ import { DI } from "./DI";
 import { TYPES } from "../internal/domain/types";
 import { Migrator } from "@migrations";
 import { Postgres } from "../internal/adapters/store";
+import { CONFIG } from "../deploy";
 
 dotenv.config({
   path: process.cwd() + "/src/deploy/env/.env"
 });
-const logger = DI.get<Logger>(TYPES.Logger);
 
 export async function bootstrap() {
-  // await DI.get<Redis>(TYPES.Redis).connect();
-
+    const logger = DI.get<Logger>(TYPES.Logger);
   try {
-    await DI.get<Migrator>(TYPES.Migrator).createDatabase();
-  } catch (e) {
-    logger.print(PREFIXES.SERVE, e as Error, "error occurred while creating database", e);
-  }
+    const cfg = DI.get<CONFIG>(TYPES.APP_CONFIG);
 
-  try {
-    await DI.get<Migrator>(TYPES.Migrator).execMigrations(DI.get<Postgres>(TYPES.Postgres));
+    if (cfg.runMigration) {
+      await DI.get<Migrator>(TYPES.Migrator).execMigrations(DI.get<Postgres>(TYPES.Postgres));
+    }
 
     DI.get<HttpServer>(TYPES.HttpServer).listen();
   } catch (e) {

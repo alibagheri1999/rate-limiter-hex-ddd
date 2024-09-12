@@ -41,7 +41,7 @@ services:
 #      - "mongo"
 #      - "postgres"
   postgres:
-    image: postgres:16
+    image: postgres
     environment:
       - POSTGRES_USER=${PG_USERNAME:-postgres}
       - POSTGRES_PASSWORD=${PG_PASSWORD:-changeme}

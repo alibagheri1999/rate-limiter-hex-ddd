@@ -1,7 +1,4 @@
--- +migrate Up
-
--- create users table
-create table if not exists "users"
+create table if not exists public."users"
     (
     id INT GENERATED ALWAYS AS IDENTITY,
     phone_number VARCHAR ( 50 ) UNIQUE NOT NULL,

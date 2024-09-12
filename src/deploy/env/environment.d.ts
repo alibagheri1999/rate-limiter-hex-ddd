@@ -19,6 +19,7 @@ declare global {
       CACHE_DURATION: number;
       REDIS_PORT: number;
       REDIS_HOST: string;
+      RUN_MIGRATION: string
     }
   }
 }

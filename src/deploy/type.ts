@@ -16,4 +16,5 @@ export type CONFIG = {
   maxRateLimit: number;
   maxLogFileSize: number;
   cacheDuration: number;
+  runMigration: boolean;
 };

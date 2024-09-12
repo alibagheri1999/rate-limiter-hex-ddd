@@ -21,6 +21,7 @@ export const APP_CONFIG: CONFIG = {
   postgresPassword: String(process.env.PG_PASSWORD),
   postgresDbName: String(process.env.PG_DB),
   debugMode: Boolean(process.env.DEBUG_MODE === "true"),
+  runMigration: Boolean(process.env.RUN_MIGRATION === "true"),
   jsDocOptions: {
     definition: {
       components: {
