@@ -25,7 +25,12 @@ export class Redis {
       });
 
       redisClient.on("error", (err) => {
-        throw new Error(err.message);
+        this.logger.print(
+          PREFIXES.REDIS,
+          err as Error,
+          "error occurred while creating redis instance",
+          err.message
+        );
       });
 
       await redisClient.connect();
@@ -40,7 +45,6 @@ export class Redis {
         "error occurred while creating redis instance",
         e
       );
-      throw e;
     }
   }
 
