@@ -29,3 +29,7 @@ export function requestSender(
 ) {
   return response.status(status).json(payload);
 }
+
+export function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

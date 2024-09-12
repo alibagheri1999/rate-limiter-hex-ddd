@@ -1,6 +1,7 @@
 import { CONFIG } from "../../../../deploy";
 import { createClient } from "redis";
 import { Logger, PREFIXES } from "../../../application/utils/log";
+import { delay } from "../../../application/utils/";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../domain/types";
 
@@ -24,11 +25,12 @@ export class Redis {
         }
       });
 
-      redisClient.on("error", (err) => {
+      redisClient.on("error", async(err) => {
+        await delay(5000)
         this.logger.print(
           PREFIXES.REDIS,
           err as Error,
-          "error occurred while creating redis instance",
+          "error occurred while connecting redis instance",
           err.message
         );
       });
@@ -39,6 +41,7 @@ export class Redis {
 
       this.logger.print(PREFIXES.REDIS, null, "Connected successfully to redis cache");
     } catch (e) {
+      await delay(5000)
       this.logger.print(
         PREFIXES.REDIS,
         e as Error,
