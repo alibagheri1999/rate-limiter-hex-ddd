@@ -5,7 +5,8 @@ module.exports = {
         'body-max-line-length': [1, 'always', 72],
         'header-max-length': [1, 'always', 52],
         'type-enum': [2, 'always', [
-            'build',
+      [
+        "build",
             'change',
             'chore',
             'ci',
